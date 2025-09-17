@@ -1,5 +1,5 @@
 const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d"); // the 2D rendering context // webgl for 3d API
 
 let username = "";
 let score = 0;
@@ -67,6 +67,11 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);// Clear entire canvas to redraw fresh frame
 
   drawBricks(); // Draw all active bricks
+  drawBall();    // Draw the ball (function not shown here)
+  drawPaddle();  // Draw the paddle (function not shown here)
+  drawScore();   // Display the current score (function not shown here)
+  drawLevel();   // Display current level (function not shown here)
+  drawLives();   // Display remaining lives (function not shown here)
   
 }
 
@@ -90,4 +95,39 @@ function drawBricks() {
       }
     }
   }
+}
+
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2); // draws circle, radius, angles
+  ctx.fillStyle = "#ff5733";
+  ctx.fill();
+  ctx.closePath();
+}
+
+function drawPaddle() {
+  ctx.beginPath(); //Starts a new drawing path.
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#00ffcc";
+  ctx.fill();
+  ctx.closePath();
+}
+
+
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText("Score: " + score, 8, 20);
+}
+
+function drawLevel() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText("Level: " + level, canvas.width - 88, 20);
+}
+
+function drawLives() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText("Lives: " + lives, canvas.width/2 - 30, 20);
 }
