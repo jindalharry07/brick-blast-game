@@ -72,6 +72,9 @@ function draw() {
   drawScore();   // Display the current score (function not shown here)
   drawLevel();   // Display current level (function not shown here)
   drawLives();   // Display remaining lives (function not shown here)
+
+  collisionDetection(); // Check if ball hits bricks and handle collisions (function not shown)
+
   
 }
 
@@ -130,4 +133,34 @@ function drawLives() {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#fff";
   ctx.fillText("Lives: " + lives, canvas.width/2 - 30, 20);
+}
+
+
+function collisionDetection() {
+  for(let c = 0; c < brickColumnCount; c++) {
+    for(let r = 0; r < bricks[c].length; r++) {
+      let brick = bricks[c][r];
+      if (brick.status === 1) {
+        if (x > brick.x && x < brick.x + brickWidth &&
+            y > brick.y && y < brick.y + brickHeight) {
+          dy = -dy;
+          brick.status = 0;
+          score++;
+          if (isLevelCleared()) {
+            level++;
+            resetGame();
+          }
+        }
+      }
+    }
+  }
+}
+
+function isLevelCleared() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < bricks[c].length; r++) {
+      if (bricks[c][r].status === 1) return false;
+    }
+  }
+  return true;
 }
