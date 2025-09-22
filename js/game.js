@@ -6,10 +6,9 @@ let score = 0;
 let level = 1;
 let lives = 3;
 
-
 const ballRadius = 8; // radius of ball
-let x, y, dx, dy, paddleX; 
-// x, y are the current position of the ball. 
+let x, y, dx, dy, paddleX;
+// x, y are the current position of the ball.
 // dx, dy are the speed and direction (velocity) of the ball.
 
 const paddleHeight = 10;
@@ -56,26 +55,77 @@ function initBricks() {
   bricks = []; // Clear the bricks array first
   for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
-    for (let r = 0; r < brickRowCount + level - 1; r++) { // more rows in higher levels
-      bricks[c][r] = { x: 0, y: 0, status: 1 };// Create a brick object
+    for (let r = 0; r < brickRowCount + level - 1; r++) {
+      // more rows in higher levels
+      bricks[c][r] = { x: 0, y: 0, status: 1 }; // Create a brick object
       // status: 1 means brick is visible and not broken yet
     }
   }
 }
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Right" || e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+    rightPressed = true;
+  } else if (e.key === "Left" || e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+    leftPressed = true;
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.key === "Right" || e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+    rightPressed = false;
+  } else if ( e.key === "Left" || e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+    leftPressed = false;
+  }
+});
+
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);// Clear entire canvas to redraw fresh frame
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear entire canvas to redraw fresh frame
 
   drawBricks(); // Draw all active bricks
-  drawBall();    // Draw the ball (function not shown here)
-  drawPaddle();  // Draw the paddle (function not shown here)
-  drawScore();   // Display the current score (function not shown here)
-  drawLevel();   // Display current level (function not shown here)
-  drawLives();   // Display remaining lives (function not shown here)
+  drawBall(); // Draw the ball (function not shown here)
+  drawPaddle(); // Draw the paddle (function not shown here)
+  drawScore(); // Display the current score (function not shown here)
+  drawLevel(); // Display current level (function not shown here)
+  drawLives(); // Display remaining lives (function not shown here)
 
   collisionDetection(); // Check if ball hits bricks and handle collisions (function not shown)
 
-  
+  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    dx = -dx; // bounce the ball in opposite direction
+  }
+  if (y + dy < ballRadius) {
+    dy = -dy; // bounce from up to down
+  } else if (y + dy > canvas.height - ballRadius) {
+    // if ball goes down
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      // touches the paddle
+      dy = -dy;
+    } else {
+      // touches the bottom edge
+      lives--;
+      if (lives === 0) {
+        saveScore(username, score, level);
+        alert("GAME OVER! Your score: " + score);
+        document.location.reload(); // reload the page
+      } else {
+        resetGame();
+      }
+    }
+  }
+
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    // move right side
+    paddleX += 7;
+  } else if (leftPressed && paddleX > 0) {
+    // move left side
+    paddleX -= 7;
+  }
+
+  // updates ball position at every frame
+  x += dx;
+  y += dy;
+  requestAnimationFrame(draw);
 }
 
 function drawBricks() {
@@ -83,16 +133,16 @@ function drawBricks() {
     for (let r = 0; r < bricks[c].length; r++) {
       if (bricks[c][r].status === 1) {
         // Calculate brick position
-        let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-        let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-        
+        let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
 
         // Draw the brick
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#f1c40f";// brick color
+        ctx.fillStyle = "#f1c40f"; // brick color
         ctx.fill();
         ctx.closePath();
       }
@@ -116,7 +166,6 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-
 function drawScore() {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#fff";
@@ -132,17 +181,20 @@ function drawLevel() {
 function drawLives() {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#fff";
-  ctx.fillText("Lives: " + lives, canvas.width/2 - 30, 20);
+  ctx.fillText("Lives: " + lives, canvas.width / 2 - 30, 20);
 }
 
-
 function collisionDetection() {
-  for(let c = 0; c < brickColumnCount; c++) {
-    for(let r = 0; r < bricks[c].length; r++) {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < bricks[c].length; r++) {
       let brick = bricks[c][r];
       if (brick.status === 1) {
-        if (x > brick.x && x < brick.x + brickWidth &&
-            y > brick.y && y < brick.y + brickHeight) {
+        if (
+          x > brick.x &&
+          x < brick.x + brickWidth &&
+          y > brick.y &&
+          y < brick.y + brickHeight
+        ) {
           dy = -dy;
           brick.status = 0;
           score++;
