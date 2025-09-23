@@ -2,25 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Brick Breaker Game</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <title>Brick Breaker Game - Auth</title>
+  <link rel="stylesheet" href="./css/auth-style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>🎮 Brick Breaker Game</h1>
+  <div class="container">
+    <h1>🎮 Brick Breaker Game</h1>
 
-  <!-- Username input -->
-  <div id="userInput">
-    <input type="text" id="username" placeholder="Enter your name" />
-    <button onclick="startGame()">Start Game</button>
+    <!-- Auth Form -->
+    <div id="authForm" class="card">
+      <h2>Login / Sign Up</h2>
+      <input type="text" id="usernameInput" placeholder="Enter Username" />
+      <input type="password" id="passwordInput" placeholder="Enter Password" />
+      <button id="authButton">Login / Register</button>
+      <div id="message"></div>
+    </div>
+
+    <!-- User Welcome -->
+    <div id="userInput" class="card" style="display:none;">
+      <p>Welcome, <span id="displayName"></span>!</p>
+      <div class="button-group">
+        <button onclick="startGame()">Start Game</button>
+        <button id="changeUserButton">Go Back / Change User</button>
+      </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <div id="gameWrapper" style="display:none;">
+      <canvas id="gameCanvas" width="480" height="320"></canvas>
+    </div>
+
+    <!-- Profile / Leaderboard Link -->
+    <div id="profileLink">
+      <a href="profile.html">View Profile & Leaderboard</a>
+    </div>
   </div>
 
-  <!-- Game Canvas -->
-  <canvas id="gameCanvas" width="480" height="320" style="display:none;"></canvas>
-
-  <br>
-  <a href="profile.html">View Profile & Leaderboard</a>
-
   <script src="./js/game.js"></script>
+  <script src="./js/auth.js"></script>
 </body>
 </html>

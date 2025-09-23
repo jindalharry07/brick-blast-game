@@ -8,7 +8,8 @@
 /* === Body Styling === */
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  background: url('../assets/videoframe_4568.png') no-repeat center center/cover;
+  position: relative;
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -17,31 +18,50 @@ body {
   min-height: 100vh;
   padding: 20px;
   text-align: center;
+  overflow: hidden;
+}
+
+/* === Dark Overlay for Readability === */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55); /* dark overlay */
+  z-index: 0;
 }
 
 /* === Heading === */
 h1 {
-  font-size: 2rem;
+  font-size: 2.3rem;
   margin-bottom: 30px;
   color: #00ffe7;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+  z-index: 1;
 }
 
 /* === Containers for Profile and Leaderboard === */
-#profile, #leaderboard {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+#profile,
+#leaderboard {
+  background: rgba(255, 255, 255, 0.1); /* glass effect */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
   width: 100%;
   max-width: 500px;
-  padding: 20px;
+  padding: 25px;
   margin-bottom: 25px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
 }
 
 #profile:hover,
 #leaderboard:hover {
   transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
 }
 
 /* === Leaderboard List Style === */
@@ -51,38 +71,45 @@ h1 {
 }
 
 #leaderboard li {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.4);
   padding: 10px 15px;
   margin: 8px 0;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   font-weight: 600;
+  color: #f5f5f5;
 }
 
 /* === Link Style === */
 a {
   text-decoration: none;
-  color: #00ffe7;
-  font-weight: 600;
-  margin-top: 20px;
-  transition: color 0.3s;
+  background: rgba(255, 215, 0, 0.9);
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: #1f1c2c;
+  font-weight: 700;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  display: inline-block;
+  z-index: 1;
 }
 
 a:hover {
-  color: #00c9b7;
-  text-decoration: underline;
+  background: gold;
+  transform: scale(1.05);
+  text-decoration: none;
 }
 
 /* === Responsive Design === */
 @media (max-width: 600px) {
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
   }
 
   #profile,
   #leaderboard {
-    padding: 15px;
+    padding: 18px;
   }
 
   #leaderboard li {

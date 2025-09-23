@@ -29,11 +29,12 @@ const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
 function startGame() {
-  username = document.getElementById("username").value.trim();
-  if (username === "") {
-    alert("Please enter your name!");
+  if (!window.currentUser) {
+    alert("No user logged in! Please login first.");
     return;
   }
+
+  username = window.currentUser;
 
   document.getElementById("userInput").style.display = "none";
   canvas.style.display = "block";
@@ -198,8 +199,12 @@ function collisionDetection() {
           dy = -dy;
           brick.status = 0;
           score++;
+
+          saveScore(username, score, level);// Save score in local storage immediately
+
           if (isLevelCleared()) {
             level++;
+            saveScore(username, score, level);
             resetGame();
           }
         }
@@ -207,6 +212,18 @@ function collisionDetection() {
     }
   }
 }
+
+function saveScore(username, score, level) {
+  let users = JSON.parse(localStorage.getItem("users")) || {};
+  if (users[username]) {
+    if (!users[username].highscore || score > users[username].highscore) {
+      users[username].highscore = score;
+    }
+    users[username].level = level;
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+}
+
 
 function isLevelCleared() {
   for (let c = 0; c < brickColumnCount; c++) {
