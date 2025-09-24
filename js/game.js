@@ -214,14 +214,16 @@ function collisionDetection() {
 }
 
 function saveScore(username, score, level) {
-  let users = JSON.parse(localStorage.getItem("users")) || {};
+  let users = JSON.parse(localStorage.getItem("brickBreakerUsers")) || {};
+
   if (users[username]) {
     if (!users[username].highscore || score > users[username].highscore) {
       users[username].highscore = score;
     }
     users[username].level = level;
-    localStorage.setItem("users", JSON.stringify(users));
   }
+
+  localStorage.setItem("brickBreakerUsers", JSON.stringify(users));
 }
 
 
