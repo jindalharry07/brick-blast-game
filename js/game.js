@@ -1,3 +1,4 @@
+window.currentUser = localStorage.getItem("lastLoggedUser") || "";
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d"); // the 2D rendering context // webgl for 3d API
 
@@ -12,7 +13,7 @@ let x, y, dx, dy, paddleX;
 // dx, dy are the speed and direction (velocity) of the ball.
 
 const paddleHeight = 10;
-const paddleWidth = 75;
+const paddleWidth = 150;
 // pressing arrow keys to move the paddle.
 
 let rightPressed = false;
@@ -20,28 +21,33 @@ let leftPressed = false;
 
 // Bricks Setup
 let bricks = [];
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
+const brickRowCount = 4;
+const brickColumnCount = 6;
+const brickWidth = 120;
 const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+const brickPadding = 15;
+const brickOffsetTop = 50;
+const brickOffsetLeft = 50;
 
 function startGame() {
   if (!window.currentUser) {
     alert("No user logged in! Please login first.");
     return;
   }
-
   username = window.currentUser;
 
+  // Hide login and welcome
+  document.getElementById("authForm").style.display = "none";
   document.getElementById("userInput").style.display = "none";
+
+  // Show game canvas
+  document.getElementById("gameWrapper").style.display = "block";
   canvas.style.display = "block";
 
   resetGame();
   draw();
 }
+
 
 function resetGame() {
   x = canvas.width / 2; // Sets the initial position of the ball (center bottom).
@@ -108,8 +114,10 @@ function draw() {
       if (lives === 0) {
         saveScore(username, score, level);
         alert("GAME OVER! Your score: " + score);
-        document.location.reload(); // reload the page
-      } else {
+        // Redirect to profile page instead of reloading
+        window.location.href = "profile.html";
+      }
+      else  {
         resetGame();
       }
     }
@@ -143,7 +151,7 @@ function drawBricks() {
         // Draw the brick
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#f1c40f"; // brick color
+        ctx.fillStyle = "#050113b7"; // brick color
         ctx.fill();
         ctx.closePath();
       }
@@ -154,7 +162,7 @@ function drawBricks() {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2); // draws circle, radius, angles
-  ctx.fillStyle = "#ff5733";
+  ctx.fillStyle = "#01020aff";
   ctx.fill();
   ctx.closePath();
 }
@@ -162,7 +170,7 @@ function drawBall() {
 function drawPaddle() {
   ctx.beginPath(); //Starts a new drawing path.
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#00ffcc";
+  ctx.fillStyle = "#0e8088c9";
   ctx.fill();
   ctx.closePath();
 }

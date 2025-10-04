@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>User Profile & Leaderboard</title>
-  <link rel="stylesheet" href="css/profile.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="./css/profile.css" rel="stylesheet">
 </head>
 <body>
-  <h1>User Profile</h1>
-  <div id="profile"></div>
-  <h1>🏆 Leaderboard</h1>
-  <div id="leaderboard"></div>
-  <br>
-  <a href="index.html">⬅ Back to Game</a>
+  <div class="container">
+    <h1>🎮 Your Profile</h1>
+
+    <div id="profileCard" class="card">
+      <div class="avatar-wrapper">
+        <img id="userAvatar" src="./assets/profile.jpg" alt="User Avatar" />
+      </div>
+      <h2 id="welcomeUsername">Welcome, User!</h2>
+      <p><strong>High Score:</strong> <span id="displayScore">0</span></p>
+      <p><strong>Last Level:</strong> <span id="displayLevel">1</span></p>
+
+      <div class="profile-buttons">
+        <button id="playAgainBtn">🎮 Play Game</button>
+        <button id="logoutBtn">🚪 Logout</button>
+      </div>
+    </div>
+
+    <div id="leaderboardCard" class="card"> 
+      <h2>🏆 Leaderboard</h2>
+      <ol id="leaderboardList">
+        <!-- Top players will be injected here -->
+      </ol>
+    </div>
+  </div>
+
   <script src="js/profile.js"></script>
 </body>
 </html>

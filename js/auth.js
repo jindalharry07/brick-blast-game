@@ -1,65 +1,72 @@
-document.getElementById('authButton').addEventListener('click', authenticateUser);
-document.getElementById('changeUserButton').addEventListener('click', goBackToAuth);
-
 function authenticateUser() {
-  const username = document.getElementById('usernameInput').value.trim();
-  const password = document.getElementById('passwordInput').value.trim();
-  const messageDiv = document.getElementById('message');
+  const username = document.getElementById("usernameInput").value.trim();
+  const password = document.getElementById("passwordInput").value.trim();
+  const messageDiv = document.getElementById("message");
 
   if (!username || !password) {
-    messageDiv.style.color = 'red';
+    messageDiv.style.color = "purple";
     messageDiv.textContent = "Username and password cannot be empty!";
     return;
   }
 
-  let users = JSON.parse(localStorage.getItem('brickBreakerUsers')) || {};
+  let users = JSON.parse(localStorage.getItem("brickBreakerUsers")) || {};
 
-  if (users[username]) {// if user exists
+  if (users[username]) {
     if (users[username].password === password) {
-      messageDiv.style.color = 'lightgreen';
+      messageDiv.style.color = "lightgreen";
       messageDiv.textContent = "Login successful!";
-      proceedToGame(username, users[username].highscore || 0);
+      proceedToProfile(username, users[username]);
     } else {
-      messageDiv.style.color = 'red';
+      messageDiv.style.color = "purple";
       messageDiv.textContent = "Incorrect password!";
     }
   } else {
-    users[username] = { password: password, highscore: 0 };
-    localStorage.setItem('brickBreakerUsers', JSON.stringify(users));
-    messageDiv.style.color = 'lightgreen';
+    // Register new user
+    users[username] = { password: password, highscore: 0, level: 1 };
+    localStorage.setItem("brickBreakerUsers", JSON.stringify(users));
+    messageDiv.style.color = "lightgreen";
     messageDiv.textContent = "Registration successful!";
-    proceedToGame(username, 0);
+    proceedToProfile(username, users[username]);
   }
 }
 
-function proceedToGame(username, highscore) {
-  document.getElementById('authForm').style.display = 'none';
-  document.getElementById('userInput').style.display = 'block';
-  document.getElementById('displayName').textContent = username;
-
-  window.currentUser = username;
-  window.currentHighscore = highscore;
+// Redirect to profile page after login
+function proceedToProfile(username, userData) {
+  localStorage.setItem("lastLoggedUser", username);
+  window.location.href = "profile.html";
 }
 
-function goBackToAuth() {
-  document.getElementById('userInput').style.display = 'none';
-  document.getElementById('authForm').style.display = 'block';
-  document.getElementById('message').textContent = "";
-  document.getElementById('usernameInput').value = "";
-  document.getElementById('passwordInput').value = "";
-}
-
-function startGame() {
-  if (!window.currentUser) {
-    alert("No user logged in! Please login first.");
-    return;
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("authButton");
+  if (btn) {
+    btn.addEventListener("click", authenticateUser);
+  } else {
+    console.error("Login button not found!");
   }
 
-  username = window.currentUser;
+  const changeUserBtn = document.getElementById("changeUserButton");
+  if (changeUserBtn) {
+    changeUserBtn.addEventListener("click", () => {
+      localStorage.removeItem("lastLoggedUser");
+      document.getElementById("authForm").style.display = "block";
+      document.getElementById("userInput").style.display = "none";
+      document.getElementById("gameWrapper").style.display = "none";
+    });
+  }
+});
 
-  document.getElementById("userInput").style.display = "none";
-  document.getElementById("gameWrapper").style.display = "flex";
+window.addEventListener("DOMContentLoaded", () => {
+  const startGameDirectly = localStorage.getItem("startGameDirectly");
+  const lastUser = localStorage.getItem("lastLoggedUser");
 
-  resetGame();
-  draw();
-}
+  if (lastUser && startGameDirectly === "true") {
+    localStorage.removeItem("startGameDirectly");
+    window.currentUser = lastUser;
+
+    document.getElementById("authForm").style.display = "none";
+    document.getElementById("userInput").style.display = "none"; // you can hide user input here if game is full screen
+    document.getElementById("gameWrapper").style.display = "block";
+
+    startGame();
+  }
+});
