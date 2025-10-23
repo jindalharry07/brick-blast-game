@@ -2,6 +2,10 @@ window.currentUser = localStorage.getItem("lastLoggedUser") || "";
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d"); // the 2D rendering context // webgl for 3d API
 
+if (!canvas || !ctx) {
+  console.error("Canvas or 2D context not found. Make sure <canvas id='gameCanvas'></canvas> is present.");
+}
+
 let username = "";
 let score = 0;
 let level = 1;
@@ -162,7 +166,7 @@ function drawBricks() {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2); // draws circle, radius, angles
-  ctx.fillStyle = "#01020aff";
+  ctx.fillStyle = "#ecedf3ff";
   ctx.fill();
   ctx.closePath();
 }
@@ -170,7 +174,7 @@ function drawBall() {
 function drawPaddle() {
   ctx.beginPath(); //Starts a new drawing path.
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#0e8088c9";
+  ctx.fillStyle = "#f2f8f8c9";
   ctx.fill();
   ctx.closePath();
 }
@@ -221,14 +225,32 @@ function collisionDetection() {
   }
 }
 
+// function saveScore(username, score, level) {
+//   let users = JSON.parse(localStorage.getItem("brickBreakerUsers")) || {};
+
+//   if (users[username]) {
+//     if (!users[username].highscore || score > users[username].highscore) {
+//       users[username].highscore = score;
+//     }
+//     users[username].level = level;
+//   }
+
+//   localStorage.setItem("brickBreakerUsers", JSON.stringify(users));
+// }
+
 function saveScore(username, score, level) {
   let users = JSON.parse(localStorage.getItem("brickBreakerUsers")) || {};
 
-  if (users[username]) {
+  if (!users[username]) {
+    users[username] = { highscore: score, level: level };
+  } else { // if user exixts
     if (!users[username].highscore || score > users[username].highscore) {
       users[username].highscore = score;
     }
-    users[username].level = level;
+
+    if (!users[username].level || level > users[username].level) {
+      users[username].level = level;
+    }
   }
 
   localStorage.setItem("brickBreakerUsers", JSON.stringify(users));
